@@ -92,3 +92,7 @@ func (h *Handler) flush(batch *batch.Batch) {
 
 	stdlog.Printf("log/elastic: flushed %d logs in %s", size, time.Since(start))
 }
+
+func (h *Handler) Asynchronous() bool {
+	return true
+}

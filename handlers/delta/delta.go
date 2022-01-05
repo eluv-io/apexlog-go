@@ -133,32 +133,31 @@ func (h *Handler) loop() {
 func (h *Handler) render(e *log.Entry, done bool) {
 	color := Colors[e.Level]
 	level := Strings[e.Level]
-	names := e.Fields.Names()
 
 	// delta and spinner
 	if done {
-		fmt.Fprintf(h.w, "\r     %-7s", time.Since(h.start).Round(time.Millisecond))
+		_, _ = fmt.Fprintf(h.w, "\r     %-7s", time.Since(h.start).Round(time.Millisecond))
 	} else {
-		fmt.Fprintf(h.w, "\r   %s %-7s", h.spin.Current(), time.Since(h.start).Round(time.Millisecond))
+		_, _ = fmt.Fprintf(h.w, "\r   %s %-7s", h.spin.Current(), time.Since(h.start).Round(time.Millisecond))
 	}
 
 	// message
-	fmt.Fprintf(h.w, " %s %s", color(level), color(e.Message))
+	_, _ = fmt.Fprintf(h.w, " %s %s", color(level), color(e.Message))
 
 	// fields
-	for _, name := range names {
-		v := e.Fields.Get(name)
+	for _, field := range e.Fields {
+		v := field.Value
 
 		if v == "" {
 			continue
 		}
 
-		fmt.Fprintf(h.w, " %s%s%v", color(name), gray("="), v)
+		_, _ = fmt.Fprintf(h.w, " %s%s%v", color(field.Name), gray("="), v)
 	}
 
 	// newline
 	if done {
-		fmt.Fprintf(h.w, "\n")
+		_, _ = fmt.Fprintf(h.w, "\n")
 		h.start = time.Now()
 	}
 }

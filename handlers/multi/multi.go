@@ -8,12 +8,20 @@ import (
 // Handler implementation.
 type Handler struct {
 	Handlers []log.Handler
+	async    bool
 }
 
 // New handler.
 func New(h ...log.Handler) *Handler {
+	async := false
+	for _, l := range h {
+		if as, ok := l.(log.Asynchronous); ok && as.Asynchronous() {
+			async = true
+		}
+	}
 	return &Handler{
 		Handlers: h,
+		async:    async,
 	}
 }
 
@@ -29,4 +37,8 @@ func (h *Handler) HandleLog(e *log.Entry) error {
 	}
 
 	return nil
+}
+
+func (h *Handler) Asynchronous() bool {
+	return h.async
 }

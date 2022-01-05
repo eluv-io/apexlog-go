@@ -13,12 +13,13 @@ func TestParseLevel(t *testing.T) {
 		Level  Level
 		Num    int
 	}{
-		{"debug", DebugLevel, 0},
-		{"info", InfoLevel, 1},
-		{"warn", WarnLevel, 2},
-		{"warning", WarnLevel, 3},
-		{"error", ErrorLevel, 4},
-		{"fatal", FatalLevel, 5},
+		{"trace", TraceLevel, 0},
+		{"debug", DebugLevel, 1},
+		{"info", InfoLevel, 2},
+		{"warn", WarnLevel, 3},
+		{"warning", WarnLevel, 4},
+		{"error", ErrorLevel, 5},
+		{"fatal", FatalLevel, 6},
 	}
 
 	for _, c := range cases {
@@ -40,10 +41,10 @@ func TestLevel_MarshalJSON(t *testing.T) {
 	e := Entry{
 		Level:   InfoLevel,
 		Message: "hello",
-		Fields:  Fields{},
+		Fields:  Fields{{Name: "name", Value: "bob"}, {Name: "foo", Value: "bar"}},
 	}
 
-	expect := `{"fields":{},"level":"info","timestamp":"0001-01-01T00:00:00Z","message":"hello"}`
+	expect := `{"fields":{"name":"bob","foo":"bar"},"level":"info","timestamp":"0001-01-01T00:00:00Z","message":"hello"}`
 
 	b, err := json.Marshal(e)
 	assert.NoError(t, err)
@@ -51,10 +52,12 @@ func TestLevel_MarshalJSON(t *testing.T) {
 }
 
 func TestLevel_UnmarshalJSON(t *testing.T) {
-	s := `{"fields":{},"level":"info","timestamp":"0001-01-01T00:00:00Z","message":"hello"}`
+	s := `{"fields":{"name":"bob"},"level":"info","timestamp":"0001-01-01T00:00:00Z","message":"hello"}`
 	e := new(Entry)
 
 	err := json.Unmarshal([]byte(s), e)
 	assert.NoError(t, err)
 	assert.Equal(t, InfoLevel, e.Level)
+	assert.Equal(t, "hello", e.Message)
+	assert.Equal(t, "bob", e.Fields.Get("name"))
 }

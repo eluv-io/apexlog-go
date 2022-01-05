@@ -25,7 +25,7 @@ func Test(t *testing.T) {
 	log.Info("world")
 	log.Error("boom")
 
-	expected := `{"fields":{"id":"123","user":"tj"},"level":"info","timestamp":"1970-01-01T00:00:00Z","message":"hello"}
+	expected := `{"fields":{"user":"tj","id":"123"},"level":"info","timestamp":"1970-01-01T00:00:00Z","message":"hello"}
 {"fields":{},"level":"info","timestamp":"1970-01-01T00:00:00Z","message":"world"}
 {"fields":{},"level":"error","timestamp":"1970-01-01T00:00:00Z","message":"boom"}
 `

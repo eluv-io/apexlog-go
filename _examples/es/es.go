@@ -29,9 +29,9 @@ func main() {
 	log.SetHandler(multi.New(e, t))
 
 	ctx := log.WithFields(log.Fields{
-		"file": "something.png",
-		"type": "image/png",
-		"user": "tobi",
+		{Name: "file", Value: "something.png"},
+		{Name: "type", Value: "image/png"},
+		{Name: "user", Value: "tobi"},
 	})
 
 	go func() {
