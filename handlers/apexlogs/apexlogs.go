@@ -84,7 +84,7 @@ func (h *Handler) HandleLog(e *log.Entry) error {
 	h.b.Push(logs.Event{
 		Level:     levelMap[e.Level],
 		Message:   e.Message,
-		Fields:    map[string]interface{}(e.Fields),
+		Fields:    e.Fields.Map(),
 		Timestamp: e.Timestamp,
 	})
 

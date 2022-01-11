@@ -41,15 +41,15 @@ func New(url string) (*Handler, error) {
 func (h *Handler) HandleLog(e *log.Entry) error {
 	switch e.Level {
 	case log.DebugLevel:
-		return h.logger.Dbgm(e.Fields, e.Message)
+		return h.logger.Dbgm(e.Fields.Map(), e.Message)
 	case log.InfoLevel:
-		return h.logger.Infom(e.Fields, e.Message)
+		return h.logger.Infom(e.Fields.Map(), e.Message)
 	case log.WarnLevel:
-		return h.logger.Warnm(e.Fields, e.Message)
+		return h.logger.Warnm(e.Fields.Map(), e.Message)
 	case log.ErrorLevel:
-		return h.logger.Errm(e.Fields, e.Message)
+		return h.logger.Errm(e.Fields.Map(), e.Message)
 	case log.FatalLevel:
-		return h.logger.Critm(e.Fields, e.Message)
+		return h.logger.Critm(e.Fields.Map(), e.Message)
 	}
 
 	return nil

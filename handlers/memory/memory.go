@@ -26,3 +26,7 @@ func (h *Handler) HandleLog(e *log.Entry) error {
 	h.Entries = append(h.Entries, e)
 	return nil
 }
+
+func (h *Handler) Asynchronous() bool {
+	return true
+}

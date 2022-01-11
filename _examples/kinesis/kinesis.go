@@ -17,9 +17,9 @@ func main() {
 	))
 
 	ctx := log.WithFields(log.Fields{
-		"file": "something.png",
-		"type": "image/png",
-		"user": "tobi",
+		{Name: "file", Value: "something.png"},
+		{Name: "type", Value: "image/png"},
+		{Name: "user", Value: "tobi"},
 	})
 
 	for range time.Tick(time.Millisecond * 100) {

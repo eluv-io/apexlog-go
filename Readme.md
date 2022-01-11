@@ -1,3 +1,14 @@
+**Warning - incompatible changes.** 
+
+This fork changes the excellent `apex/log` framework in a way that makes it NOT backward compatible with upstream:
+
+* `Fields` is now a slice rather than a map: fields are no more reordered when logging occurs.
+* Add a `Trace` level for super detailed logging: the original `Trace` function has been renamed to `Watch`.
+
+Other changes: 
+
+* use `sync.Pool` for entries and field instances whenever possible.
+* logging functions now have an optional `kv ...interface{}` vararg parameter expected to be key/value pairs each added as a log field.  Values of type `error` can be passed alone and are automatically  assigned to a key 'error'. 
 
 ![Structured logging for golang](assets/title.png)
 
@@ -36,9 +47,9 @@ import (
 
 func main() {
 	ctx := log.WithFields(log.Fields{
-		"file": "something.png",
-		"type": "image/png",
-		"user": "tobi",
+		{Name: "file", Value: "something.png"},
+		{Name: "type", Value: "image/png"},
+		{Name: "user", Value: "tobi"},
 	})
 
 	for range time.Tick(time.Millisecond * 200) {

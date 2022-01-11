@@ -56,14 +56,14 @@ func (h *Handler) HandleLog(e *log.Entry) error {
 	var buf bytes.Buffer
 
 	enc := logfmt.NewEncoder(&buf)
-	enc.EncodeKeyval("level", e.Level.String())
-	enc.EncodeKeyval("message", e.Message)
+	_ = enc.EncodeKeyval("level", e.Level.String())
+	_ = enc.EncodeKeyval("message", e.Message)
 
-	for k, v := range e.Fields {
-		enc.EncodeKeyval(k, v)
+	for _, field := range e.Fields {
+		_ = enc.EncodeKeyval(field.Name, field.Value)
 	}
 
-	enc.EndRecord()
+	_ = enc.EndRecord()
 
 	msg := []byte(fmt.Sprintf("<%d>%s %s %s[%d]: %s\n", syslog.LOG_KERN, ts, h.Hostname, h.Tag, os.Getpid(), buf.String()))
 

@@ -28,20 +28,18 @@ func New(w io.Writer) *Handler {
 
 // HandleLog implements log.Handler.
 func (h *Handler) HandleLog(e *log.Entry) error {
-	names := e.Fields.Names()
-
 	h.mu.Lock()
 	defer h.mu.Unlock()
 
-	h.enc.EncodeKeyval("timestamp", e.Timestamp)
-	h.enc.EncodeKeyval("level", e.Level.String())
-	h.enc.EncodeKeyval("message", e.Message)
+	_ = h.enc.EncodeKeyval("timestamp", e.Timestamp)
+	_ = h.enc.EncodeKeyval("level", e.Level.String())
+	_ = h.enc.EncodeKeyval("message", e.Message)
 
-	for _, name := range names {
-		h.enc.EncodeKeyval(name, e.Fields.Get(name))
+	for _, field := range e.Fields {
+		_ = h.enc.EncodeKeyval(field.Name, field.Value)
 	}
 
-	h.enc.EndRecord()
+	_ = h.enc.EndRecord()
 
 	return nil
 }

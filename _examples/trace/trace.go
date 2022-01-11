@@ -10,7 +10,7 @@ import (
 
 func work(ctx log.Interface) (err error) {
 	path := "Readme.md"
-	defer ctx.WithField("path", path).Trace("opening").Stop(&err)
+	defer ctx.WithField("path", path).Watch("opening").Stop(&err)
 	_, err = os.Open(path)
 	return
 }
@@ -19,8 +19,8 @@ func main() {
 	log.SetHandler(text.New(os.Stderr))
 
 	ctx := log.WithFields(log.Fields{
-		"app": "myapp",
-		"env": "prod",
+		{Name: "app", Value: "myapp"},
+		{Name: "env", Value: "prod"},
 	})
 
 	for range time.Tick(time.Second) {

@@ -101,8 +101,8 @@ func Fatalf(msg string, v ...interface{}) {
 	Log.Fatalf(msg, v...)
 }
 
-// Trace returns a new entry with a Stop method to fire off
+// Watch returns a new entry with a Stop method to fire off
 // a corresponding completion log, useful with defer.
-func Trace(msg string) *Entry {
-	return Log.Trace(msg)
+func Watch(msg string) *Entry {
+	return Log.Watch(msg)
 }
