@@ -3,59 +3,13 @@ package log
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	stdlog "log"
 	"sort"
-	"sync"
 	"time"
 )
 
 // assert interface compliance.
 var _ Interface = (*Logger)(nil)
-
-var fieldsPool sync.Pool
-
-type Field struct {
-	pool  bool
-	Name  string
-	Value interface{}
-}
-
-// newField returns a Field initialized with the given name and value.
-// The field is retrieved from a pool and will be released back to the pool once
-// logging occurred.
-func newField(name string, value interface{}) *Field {
-	var e *Field
-	if v := fieldsPool.Get(); v != nil {
-		e = v.(*Field)
-	} else {
-		e = new(Field)
-	}
-	e.pool = true
-	e.Reset(name, value)
-	return e
-}
-
-func (f *Field) release() {
-	if f.pool {
-		f.Reset("", nil)
-		fieldsPool.Put(f)
-	}
-}
-
-func (f *Field) Reset(name string, value interface{}) {
-	f.Name = name
-	f.Value = value
-}
-
-func (f *Field) toJSON() ([]byte, error) {
-	val, err := json.Marshal(f.Value)
-	if err != nil {
-		return nil, err
-	}
-	s := fmt.Sprintf("\"%s\": %v", f.Name, string(val))
-	return []byte(s), nil
-}
 
 // Fielder is an interface for providing fields to custom types.
 type Fielder interface {
@@ -178,7 +132,7 @@ type Logger struct {
 
 // WithFields returns a new entry with `fields` set.
 func (l *Logger) WithFields(fields Fielder) *Entry {
-	ret := newEntry(l)
+	ret := l.newEntry()
 	defer ret.Release()
 	return ret.WithFields(fields.Fields())
 }
@@ -188,7 +142,7 @@ func (l *Logger) WithFields(fields Fielder) *Entry {
 // Note that the `key` should not have spaces in it - use camel
 // case or underscores
 func (l *Logger) WithField(key string, value interface{}) *Entry {
-	ret := newEntry(l)
+	ret := l.newEntry()
 	defer ret.Release()
 	return ret.WithField(key, value)
 }
@@ -196,7 +150,7 @@ func (l *Logger) WithField(key string, value interface{}) *Entry {
 // WithDuration returns a new entry with the "duration" field set
 // to the given duration in milliseconds.
 func (l *Logger) WithDuration(d time.Duration) *Entry {
-	ret := newEntry(l)
+	ret := l.newEntry()
 	defer ret.Release()
 	return ret.WithDuration(d)
 }
@@ -206,90 +160,90 @@ func (l *Logger) WithError(err error) *Entry {
 	if err == nil {
 		return NewEntry(l)
 	}
-	ret := newEntry(l)
+	ret := l.newEntry()
 	defer ret.Release()
 	return ret.WithError(err)
 }
 
 func (l *Logger) Trace(msg string, fields ...interface{}) {
-	e := newEntry(l)
+	e := l.newEntry()
 	defer e.Release()
 	e.Trace(msg, fields...)
 }
 
 // Debug level message.
 func (l *Logger) Debug(msg string, fields ...interface{}) {
-	e := newEntry(l)
+	e := l.newEntry()
 	defer e.Release()
 	e.Debug(msg, fields...)
 }
 
 // Info level message.
 func (l *Logger) Info(msg string, fields ...interface{}) {
-	e := newEntry(l)
+	e := l.newEntry()
 	defer e.Release()
 	e.Info(msg, fields...)
 }
 
 // Warn level message.
 func (l *Logger) Warn(msg string, fields ...interface{}) {
-	e := newEntry(l)
+	e := l.newEntry()
 	defer e.Release()
 	e.Warn(msg, fields...)
 }
 
 // Error level message.
 func (l *Logger) Error(msg string, fields ...interface{}) {
-	e := newEntry(l)
+	e := l.newEntry()
 	defer e.Release()
 	e.Error(msg, fields...)
 }
 
 // Fatal level message, followed by an exit.
 func (l *Logger) Fatal(msg string, fields ...interface{}) {
-	e := newEntry(l)
+	e := l.newEntry()
 	defer e.Release()
 	e.Fatal(msg, fields...)
 }
 
 // Tracef level formatted message.
 func (l *Logger) Tracef(msg string, v ...interface{}) {
-	e := newEntry(l)
+	e := l.newEntry()
 	defer e.Release()
 	e.Tracef(msg, v...)
 }
 
 // Debugf level formatted message.
 func (l *Logger) Debugf(msg string, v ...interface{}) {
-	e := newEntry(l)
+	e := l.newEntry()
 	defer e.Release()
 	e.Debugf(msg, v...)
 }
 
 // Infof level formatted message.
 func (l *Logger) Infof(msg string, v ...interface{}) {
-	e := newEntry(l)
+	e := l.newEntry()
 	defer e.Release()
 	e.Infof(msg, v...)
 }
 
 // Warnf level formatted message.
 func (l *Logger) Warnf(msg string, v ...interface{}) {
-	e := newEntry(l)
+	e := l.newEntry()
 	defer e.Release()
 	e.Warnf(msg, v...)
 }
 
 // Errorf level formatted message.
 func (l *Logger) Errorf(msg string, v ...interface{}) {
-	e := newEntry(l)
+	e := l.newEntry()
 	defer e.Release()
 	e.Errorf(msg, v...)
 }
 
 // Fatalf level formatted message, followed by an exit.
 func (l *Logger) Fatalf(msg string, v ...interface{}) {
-	e := newEntry(l)
+	e := l.newEntry()
 	defer e.Release()
 	e.Fatalf(msg, v...)
 }
@@ -306,18 +260,28 @@ func (l *Logger) log(level Level, e *Entry, msg string) {
 	if l == nil {
 		return
 	}
-	defer e.Release()
 	if level < l.Level {
 		return
 	}
-	async := false
-	if fin, ok := l.Handler.(Asynchronous); ok {
-		async = fin.Asynchronous()
-	}
-	entry := e.finalize(level, msg, !async)
+	entry := e.finalize(level, msg, l.usePool())
 	defer entry.Release()
 
 	if err := l.Handler.HandleLog(entry); err != nil {
 		stdlog.Printf("error logging: %s", err)
 	}
+}
+
+func (l *Logger) newEntry() *Entry {
+	if l.usePool() {
+		return newEntry(l)
+	}
+	return NewEntry(l)
+}
+
+func (l *Logger) usePool() bool {
+	async := false
+	if fin, ok := l.Handler.(Asynchronous); ok {
+		async = fin.Asynchronous()
+	}
+	return !async
 }

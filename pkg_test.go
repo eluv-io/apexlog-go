@@ -68,9 +68,9 @@ func Example_multipleFields() {
 	}).Info("upload")
 }
 
-// Trace can be used to simplify logging of start and completion events,
+// Watch can be used to simplify logging of start and completion events,
 // for example an upload which may fail.
-func Example_trace() {
+func Example_watch() {
 	fn := func() (err error) {
 		defer log.Watch("upload").Stop(&err)
 		return

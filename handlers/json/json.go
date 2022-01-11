@@ -19,11 +19,18 @@ type Handler struct {
 	mu sync.Mutex
 }
 
-// New handler.
-func New(w io.Writer) *Handler {
-	return &Handler{
+// New returns a new handler. By default, the json encoder used by the handler
+// has SetEscapeHTML(false). The first escapeHtml optional params can be used
+// to change this behavior.
+func New(w io.Writer, escapeHtml ...bool) *Handler {
+	ret := &Handler{
 		Encoder: j.NewEncoder(w),
 	}
+	ret.Encoder.SetEscapeHTML(false)
+	if len(escapeHtml) > 0 {
+		ret.Encoder.SetEscapeHTML(escapeHtml[0])
+	}
+	return ret
 }
 
 // HandleLog implements log.Handler.

@@ -82,13 +82,6 @@ func (e *Entry) WithFields(fields Fielder) *Entry {
 	}
 }
 
-// withFields returns a new entry from the pool with `fields` set.
-func (e *Entry) withFields(fields Fielder) *Entry {
-	ret := newEntry(e.Logger)
-	ret.fields = e.appendFields(fields)
-	return ret
-}
-
 // WithField returns a new entry with the `key` and `value` set.
 func (e *Entry) WithField(key string, value interface{}) *Entry {
 	return e.WithFields(Fields{&Field{Name: key, Value: value}})
@@ -188,7 +181,7 @@ func (e *Entry) withKvFields(args ...interface{}) *Entry {
 			f = append(f, newField("unknown", convert(args[idx])))
 		}
 	}
-	return e.withFields(f)
+	return e.WithFields(f)
 }
 
 // Trace level message.

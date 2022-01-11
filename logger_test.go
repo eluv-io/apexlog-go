@@ -83,7 +83,7 @@ func TestLogger_WithField(t *testing.T) {
 	assert.Equal(t, log.Fields{{Name: "file", Value: "sloth.png"}, {Name: "user", Value: "Tobi"}}, e.Fields)
 }
 
-func TestLogger_Trace_info(t *testing.T) {
+func TestLogger_Watch_info(t *testing.T) {
 	h := memory.New()
 
 	l := &log.Logger{
@@ -114,7 +114,7 @@ func TestLogger_Trace_info(t *testing.T) {
 	}
 }
 
-func TestLogger_Trace_error(t *testing.T) {
+func TestLogger_Watch_error(t *testing.T) {
 	h := memory.New()
 
 	l := &log.Logger{
@@ -146,7 +146,7 @@ func TestLogger_Trace_error(t *testing.T) {
 	}
 }
 
-func TestLogger_Trace_nil(t *testing.T) {
+func TestLogger_Watch_nil(t *testing.T) {
 	h := memory.New()
 
 	l := &log.Logger{
@@ -241,15 +241,13 @@ func BenchmarkLogger_large(b *testing.B) {
 			{Name: "file", Value: "sloth.png"},
 			{Name: "type", Value: "image/png"},
 			{Name: "size", Value: 1 << 20},
-		}).
-			WithFields(log.Fields{
-				{Name: "some", Value: "more"},
-				{Name: "data", Value: "here"},
-				{Name: "whatever", Value: "blah blah"},
-				{Name: "more", Value: "stuff"},
-				{Name: "context", Value: "such useful"},
-				{Name: "much", Value: "fun"},
-			}).
-			WithError(err).Error("upload failed")
+		}).WithFields(log.Fields{
+			{Name: "some", Value: "more"},
+			{Name: "data", Value: "here"},
+			{Name: "whatever", Value: "blah blah"},
+			{Name: "more", Value: "stuff"},
+			{Name: "context", Value: "such useful"},
+			{Name: "much", Value: "fun"},
+		}).WithError(err).Error("upload failed")
 	}
 }
