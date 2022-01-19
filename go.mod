@@ -1,4 +1,4 @@
-module github.com/eluv-io/go-apexlog
+module github.com/eluv-io/apexlog-go
 
 go 1.13
 
