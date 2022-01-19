@@ -4,9 +4,10 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/apex/log"
-	"github.com/apex/log/handlers/memory"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/eluv-io/apexlog-go"
+	"github.com/eluv-io/apexlog-go/handlers/memory"
 )
 
 type Pet struct {

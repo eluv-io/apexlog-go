@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/apex/log"
-	hjson "github.com/apex/log/handlers/json"
+	log "github.com/eluv-io/apexlog-go"
+	hjson "github.com/eluv-io/apexlog-go/handlers/json"
 )
 
 func TestLog_text(t *testing.T) {

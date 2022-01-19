@@ -5,7 +5,7 @@ package memory
 import (
 	"sync"
 
-	"github.com/apex/log"
+	"github.com/eluv-io/apexlog-go"
 )
 
 // Handler implementation.

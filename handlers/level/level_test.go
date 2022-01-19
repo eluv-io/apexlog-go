@@ -5,9 +5,9 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/apex/log"
-	"github.com/apex/log/handlers/level"
-	"github.com/apex/log/handlers/memory"
+	"github.com/eluv-io/apexlog-go"
+	"github.com/eluv-io/apexlog-go/handlers/level"
+	"github.com/eluv-io/apexlog-go/handlers/memory"
 )
 
 func Test(t *testing.T) {

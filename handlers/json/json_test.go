@@ -5,10 +5,10 @@ import (
 	"testing"
 	"time"
 
+	log "github.com/eluv-io/apexlog-go"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/apex/log"
-	"github.com/apex/log/handlers/json"
+	"github.com/eluv-io/apexlog-go/handlers/json"
 )
 
 func init() {

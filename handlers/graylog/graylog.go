@@ -2,8 +2,8 @@
 package graylog
 
 import (
-	"github.com/apex/log"
 	"github.com/aphistic/golf"
+	"github.com/eluv-io/apexlog-go"
 )
 
 // Handler implementation.

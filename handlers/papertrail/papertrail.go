@@ -10,7 +10,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/apex/log"
+	"github.com/eluv-io/apexlog-go"
 	"github.com/go-logfmt/logfmt"
 )
 

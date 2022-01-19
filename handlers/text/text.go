@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/apex/log"
+	"github.com/eluv-io/apexlog-go"
 )
 
 // Default handler outputting to stderr.

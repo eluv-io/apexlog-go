@@ -3,10 +3,10 @@ package main
 import (
 	"os"
 
+	log "github.com/eluv-io/apexlog-go"
 	"github.com/pkg/errors"
 
-	"github.com/apex/log"
-	"github.com/apex/log/handlers/logfmt"
+	"github.com/eluv-io/apexlog-go/handlers/logfmt"
 )
 
 func main() {

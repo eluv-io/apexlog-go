@@ -6,7 +6,7 @@ import (
 
 	"github.com/tj/assert"
 
-	"github.com/apex/log"
+	"github.com/eluv-io/apexlog-go"
 )
 
 func TestFromContext(t *testing.T) {

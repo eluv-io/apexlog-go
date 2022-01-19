@@ -9,8 +9,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/apex/log"
 	"github.com/aybabtme/rgbterm"
+	"github.com/eluv-io/apexlog-go"
 	"github.com/tj/go-spin"
 )
 

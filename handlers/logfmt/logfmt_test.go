@@ -8,8 +8,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/apex/log"
-	"github.com/apex/log/handlers/logfmt"
+	"github.com/eluv-io/apexlog-go"
+	"github.com/eluv-io/apexlog-go/handlers/logfmt"
 )
 
 func init() {
