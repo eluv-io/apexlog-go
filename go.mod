@@ -3,7 +3,6 @@ module github.com/eluv-io/apexlog-go
 go 1.13
 
 require (
-	github.com/apex/logs v1.0.0
 	github.com/aphistic/golf v0.0.0-20180712155816-02c07f170c5a
 	github.com/aphistic/sweet v0.2.0 // indirect
 	github.com/aws/aws-sdk-go v1.20.6
