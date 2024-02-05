@@ -13,8 +13,8 @@ func TestEntry_WithFields(t *testing.T) {
 	assert.Nil(t, a.Fields)
 
 	b := a.WithFields(Fields{{Name: "foo", Value: "bar"}})
-	assert.Equal(t, Fields{}, a.mergedFields())
-	assert.Equal(t, Fields{{Name: "foo", Value: "bar"}}, b.mergedFields())
+	assert.Equal(t, Fields{}, a.MergedFields())
+	assert.Equal(t, Fields{{Name: "foo", Value: "bar"}}, b.MergedFields())
 
 	c := a.WithFields(Fields{{Name: "foo", Value: "hello"}, {Name: "bar", Value: "world"}})
 
@@ -28,38 +28,38 @@ func TestEntry_WithFields(t *testing.T) {
 func TestEntry_WithField(t *testing.T) {
 	a := NewEntry(nil)
 	b := a.WithField("foo", "bar")
-	assert.Equal(t, Fields{}, a.mergedFields())
-	assert.Equal(t, Fields{{Name: "foo", Value: "bar"}}, b.mergedFields())
+	assert.Equal(t, Fields{}, a.MergedFields())
+	assert.Equal(t, Fields{{Name: "foo", Value: "bar"}}, b.MergedFields())
 }
 
 func TestEntry_WithError(t *testing.T) {
 	a := NewEntry(nil)
 	b := a.WithError(fmt.Errorf("boom"))
-	assert.Equal(t, Fields{}, a.mergedFields())
-	assert.Equal(t, Fields{{Name: "error", Value: "boom"}}, b.mergedFields())
+	assert.Equal(t, Fields{}, a.MergedFields())
+	assert.Equal(t, Fields{{Name: "error", Value: "boom"}}, b.MergedFields())
 }
 
 func TestEntry_WithError_fields(t *testing.T) {
 	a := NewEntry(nil)
 	b := a.WithError(errFields("boom"))
-	assert.Equal(t, Fields{}, a.mergedFields())
+	assert.Equal(t, Fields{}, a.MergedFields())
 	assert.Equal(t, Fields{
 		{Name: "error", Value: "boom"},
 		{Name: "reason", Value: "timeout"},
-	}, b.mergedFields())
+	}, b.MergedFields())
 }
 
 func TestEntry_WithError_nil(t *testing.T) {
 	a := NewEntry(nil)
 	b := a.WithError(nil)
-	assert.Equal(t, Fields{}, a.mergedFields())
-	assert.Equal(t, Fields{}, b.mergedFields())
+	assert.Equal(t, Fields{}, a.MergedFields())
+	assert.Equal(t, Fields{}, b.MergedFields())
 }
 
 func TestEntry_WithDuration(t *testing.T) {
 	a := NewEntry(nil)
 	b := a.WithDuration(time.Second * 2)
-	assert.Equal(t, Fields{{Name: "duration", Value: int64(2000)}}, b.mergedFields())
+	assert.Equal(t, Fields{{Name: "duration", Value: int64(2000)}}, b.MergedFields())
 }
 
 type errFields string
