@@ -265,8 +265,8 @@ func (e *Entry) Stop(err *error) {
 	}
 }
 
-// mergedFields returns the fields list collapsed into a single one.
-func (e *Entry) mergedFields() Fields {
+// MergedFields returns the fields list collapsed into a single one.
+func (e *Entry) MergedFields() Fields {
 	f := Fields{}
 
 	for _, fields := range e.fields {
@@ -284,7 +284,7 @@ func (e *Entry) finalize(level Level, msg string, pool bool) *Entry {
 		// note: async entry cannot be taken from the pool since some handlers
 		//       (e.g. memory handler) keep entries
 		ret := newEntry(e.Logger)
-		ret.Fields = e.mergedFields()
+		ret.Fields = e.MergedFields()
 		ret.Level = level
 		ret.Message = msg
 		ret.Timestamp = Now()
@@ -292,7 +292,7 @@ func (e *Entry) finalize(level Level, msg string, pool bool) *Entry {
 	}
 	return &Entry{
 		Logger:    e.Logger,
-		Fields:    e.mergedFields(),
+		Fields:    e.MergedFields(),
 		Level:     level,
 		Message:   msg,
 		Timestamp: Now(),
